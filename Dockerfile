@@ -2,7 +2,7 @@ From ubuntu:trusty
 MAINTAINER Elliott Ye
 
 # 기존 미러 서버를 한국 서버로 변경
-RUN sed -i 's/archive.ubuntu.com/ftp.neowiz.com/g' /etc/apt/sources.list
+RUN sed -i 's/archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
 
 
 
@@ -12,9 +12,18 @@ ENV DEBIAN_FRONTEND noninteractive
 # Update
 RUN apt-get update
 
+# Relocate the timezone file
+RUN mkdir -p /config/etc && mv /etc/timezone /config/etc/ && ln -s /config/etc/timezone /etc/
+
+# Set timezone as specified in /config/etc/timezone
+dpkg-reconfigure -f noninteractive tzdata
+
 # Set the time zone
-RUN echo "Asia/Seoul" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
-VOLUME /etc/timezone /etc/localtime
+RUN echo "Asia/Seoul" > /etc/timezone
+
+# Set the time zone
+#RUN echo "Asia/Seoul" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
+#VOLUME ["/etc/timezone","/etc/localtime"]
 
 RUN locale-gen ko_KR.UTF-8 && \
     echo 'LANG="ko_KR.UTF-8"' > /etc/default/locale

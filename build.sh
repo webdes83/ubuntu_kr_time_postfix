@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t catatnight/postfix .
+docker build -t webdes/ubuntu_kr_time_postfix .
